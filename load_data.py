@@ -16,7 +16,7 @@ def load_data(name):
         data = pk.load(f)
         # train = DataSet(data['train_images'], data['train_labels'])
         # test = DataSet(data['test_images'], data['test_labels'])
-        train = DataSet(data['images'], data['labels_cho'])
+        train = DataSet(data['images'], data['labels'])
         test = None
         print('done!')
         return Datasets(train=train, test=test)
