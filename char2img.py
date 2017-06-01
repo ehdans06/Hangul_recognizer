@@ -2,57 +2,61 @@ from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 import pickle as pk
 
-# EUC-KR
-def euc_kr(image_size, font, save_img=False, save_dataset=False):
+def char2img(encoding, image_size, fontname, save_img=False, save_dataset=False):
+    num_cho, num_jung, num_jong = 19, 21, 28
     if save_dataset:
-        num_cho, num_jung, num_jong = 19, 21, 28
         data = {
             'images': [],
             'labels': []
         }
 
-    for i in range(0x30+128, 0x49+128):
-        for j in range(0x21+128, 0x7F+128):
-            char = bytes([i, j]).decode('euc-kr')
-            img = Image.new('L', (image_size, image_size))
-            draw = ImageDraw.Draw(img)
-            draw.text((0, 0), char, 255, font=font)
+    chars = []
+    if encoding == 'euc-kr':
+        chars = euc_kr_gen()
+    elif encoding == 'unicode':
+        chars = unicode_gen()
 
-            if save_img:
-                img.save(char + '.bmp')
+    for char in chars:
+        img = Image.new('L', (image_size, image_size))
+        draw = ImageDraw.Draw(img)
+        draw.text((0, 0), char, 255, font=ImageFont.truetype('fonts/'+fontname+'.ttf', image_size))
 
-            if save_dataset:
-                img_data = np.asarray(img, dtype=np.uint8) / 256  # img to ndarray
-                cho, jung, jong = jamo_decomposition(char)
-                label_onehot = np.zeros(num_cho + num_jung + num_jong)
-                label_onehot[cho] = 1
-                label_onehot[num_cho + jung] = 1
-                label_onehot[num_cho + num_jung + jong] = 1
-                data['images'].append(img_data)
-                data['labels'].append(label_onehot)
+        if save_img:
+            # img = img.rotate(45)
+            img.save(char + '.bmp')
+
+        if save_dataset:
+            img_data = np.asarray(img, dtype=np.uint8) / 256  # img to ndarray
+            cho, jung, jong = jamo_decomposition(char)
+            label_onehot = np.zeros(num_cho + num_jung + num_jong)
+            label_onehot[cho] = 1
+            label_onehot[num_cho + jung] = 1
+            label_onehot[num_cho + num_jung + jong] = 1
+            data['images'].append(img_data)
+            data['labels'].append(label_onehot)
 
     if save_dataset:
         data['images'] = np.array(data['images']).reshape((-1, image_size, image_size, 1))
         data['labels'] = np.array(data['labels'])
-        file_path = 'dataset/euc-kr.pkl'
+        file_path = 'dataset/' + encoding + '_' + fontname + '.pkl'
         with open(file_path, 'wb') as f:
             pk.dump(data, f, pk.HIGHEST_PROTOCOL)
 
+# EUC-KR
+def euc_kr_gen():
+    for i in range(0x30+128, 0x49+128):
+        for j in range(0x21+128, 0x7F+128):
+            yield bytes([i, j]).decode('euc-kr')
 
 # Unicode
-def unicode(image_size, font):
+def unicode_gen():
     for i in range(0xAC00, 0xD7A4):
-        char = chr(i)
-        img = Image.new('L', (image_size, image_size))
-        draw = ImageDraw.Draw(img)
-        draw.text((0, 0), char, 255, font=font)
-        # img = img.rotate(45)
-        img.save(char + '.bmp')
+        yield chr(i)
 
-def unicode_one(image_size, font):
+def unicode_one(image_size, fontname):
     img = Image.new('RGB', (image_size, image_size))
     draw = ImageDraw.Draw(img)
-    draw.text((0, 0), '뷁', (255,255,255), font=font)
+    draw.text((0, 0), '뷁', (255,255,255), font=ImageFont.truetype('fonts/'+fontname+'.ttf', image_size))
     img.save('unicode-one.png')
 
 def jamo_decomposition(char):
@@ -72,8 +76,9 @@ def ndarray_to_img(img_data):
 
 def main():
     image_size = 28
-    font = ImageFont.truetype('fonts/NanumBarunGothic.ttf', image_size)
-    euc_kr(image_size=image_size, font=font, save_dataset=True)
+    fontname = 'NanumBarunGothic'
+    # fontname = 'NanumSquareR'
+    char2img(encoding='unicode', image_size=image_size, fontname=fontname, save_dataset=True)
 
 if __name__ == '__main__':
     main()
