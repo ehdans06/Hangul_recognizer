@@ -93,5 +93,6 @@ for it in range(max_epoch):
 """
 # Test
 # print(sess.run(accuracy, feed_dict={x: data.test.images, y_: data.test.labels}))
-feed_dict_test = {x: data.test.images, y_label: data.test.labels}
+test_data = load_data('unicode_SeoulNamsanB')
+feed_dict_test = {x: test_data.test.images, y_label: test_data.test.labels}
 print('\nTest Accuracy : %f, %f, %f' % tuple(sess.run(accuracy, feed_dict=feed_dict_test)))

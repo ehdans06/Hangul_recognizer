@@ -21,8 +21,8 @@ def char2img(encoding, image_size, fontname, save_img=False, save_dataset=False)
         for char in chars:
             img = Image.new('L', (image_size, image_size))
             draw = ImageDraw.Draw(img)
-            draw.text((0, 0), char, 255, font=ImageFont.truetype('fonts/'+random.choice(fontname)+'.ttf', image_size))
-
+#            draw.text((0, 0), char, 255, font=ImageFont.truetype('fonts/'+random.choice(fontname)+'.ttf', image_size))
+            draw.text((0, 0), char, 255, font=ImageFont.truetype('fonts/'+fontname[rot_times]+'.ttf', image_size))
             if save_img:
                 img = img.rotate(random.randrange(-30,30))
                 img.save(char + '.bmp')
@@ -78,9 +78,10 @@ def ndarray_to_img(img_data):
 
 def main():
     image_size = 28
-    fontname = ['NanumBarunGothic', 'gungsoe', 'NanumBrush', 'NanumGothic', 'NanumMyeongjo', 'NanumPen']
-    # fontname = 'NanumSquareR'
-    char2img(encoding='unicode', image_size=image_size, fontname=fontname, save_dataset=True)
+    fontname_train = ['NanumBarunGothic', 'gungsoe', 'NanumGothic', 'NanumPen', 'NanumMyeongjo', 'NanumBrush']
+    fontname_test = ['SeoulNamsanB', 'SeoulNamsanL']
+    char2img(encoding='unicode', image_size=image_size, fontname=fontname_train, save_dataset=True)
+    char2img(encoding='unicode', image_size=image_size, fontname=fontname_test, save_dataset=True)
 
 if __name__ == '__main__':
     main()

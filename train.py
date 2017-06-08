@@ -1,7 +1,7 @@
 import tensorflow as tf
 from load_data import load_data
 
-max_epoch = 1000
+max_epoch = 300
 batch_size = 100
 num_cho, num_jung, num_jong = 19, 21, 28
 tensorboard = False
@@ -79,6 +79,6 @@ for it in range(max_epoch):
             train_writer.add_summary(merged.eval(feed_dict=feed_dict_valid), it)
 
 # Test
-# test_data = load_data('unicode_NanumBarunGothic')
-feed_dict_test = {x: data.test.images, y_label: data.test.labels}
+test_data = load_data('unicode_SeoulNamsanB')
+feed_dict_test = {x: test_data.test.images, y_label: test_data.test.labels}
 print('\nTest Accuracy : %f, %f, %f -> %f' % tuple(sess.run(accuracy, feed_dict=feed_dict_test)))
