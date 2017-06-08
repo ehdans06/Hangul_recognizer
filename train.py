@@ -1,7 +1,7 @@
 import tensorflow as tf
 from load_data import load_data
 
-max_epoch = 300
+max_epoch = 1000
 batch_size = 100
 num_cho, num_jung, num_jong = 19, 21, 28
 tensorboard = False
@@ -9,14 +9,14 @@ tensorboard = False
 data = load_data('unicode_NanumBarunGothic')
 
 x = tf.placeholder(dtype=tf.float32, shape=[None, 28, 28, 1])
-y1_conv = tf.layers.conv2d(inputs=x, filters=20, kernel_size=5, padding='same', activation=tf.nn.relu) # use_bias=False
-# y1_norm = tf.layers.batch_normalization(inputs=y1_conv)
-y1_pool = tf.layers.max_pooling2d(inputs=y1_conv, pool_size=2, strides=2, padding='valid')
-y2_conv = tf.layers.conv2d(inputs=y1_pool, filters=50, kernel_size=5, padding='same', activation=tf.nn.relu) # use_bias=False
-# y2_norm = tf.layers.batch_normalization(inputs=y2_conv)
-y2_pool = tf.layers.max_pooling2d(inputs=y2_conv, pool_size=2, strides=2, padding='valid')
+y1_conv = tf.layers.conv2d(inputs=x, filters=40, kernel_size=5, padding='same', activation=tf.nn.relu) # use_bias=False
+y1_norm = tf.layers.batch_normalization(inputs=y1_conv)
+y1_pool = tf.layers.max_pooling2d(inputs=y1_norm, pool_size=2, strides=2, padding='valid')
+y2_conv = tf.layers.conv2d(inputs=y1_pool, filters=100, kernel_size=5, padding='same', activation=tf.nn.relu) # use_bias=False
+y2_norm = tf.layers.batch_normalization(inputs=y2_conv)
+y2_pool = tf.layers.max_pooling2d(inputs=y2_norm, pool_size=2, strides=2, padding='valid')
 y2_flat = tf.contrib.layers.flatten(inputs=y2_pool)
-y3 = tf.layers.dense(inputs=y2_flat, units=500, activation=tf.nn.relu)
+y3 = tf.layers.dense(inputs=y2_flat, units=1000, activation=tf.nn.relu)
 y4 = tf.layers.dense(inputs=y3, units=68)
 y_logit = y4
 y_label = tf.placeholder(dtype=tf.float32, shape=[None, 68])
@@ -79,6 +79,6 @@ for it in range(max_epoch):
             train_writer.add_summary(merged.eval(feed_dict=feed_dict_valid), it)
 
 # Test
-test_data = load_data('unicode_SeoulNamsanB')
-feed_dict_test = {x: test_data.test.images, y_label: test_data.test.labels}
+#test_data = load_data('unicode_SeoulNamsanB')
+feed_dict_test = {x: data.test.images, y_label: data.test.labels}
 print('\nTest Accuracy : %f, %f, %f -> %f' % tuple(sess.run(accuracy, feed_dict=feed_dict_test)))

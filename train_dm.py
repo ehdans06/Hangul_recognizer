@@ -12,33 +12,33 @@ x = tf.placeholder(dtype=tf.float32, shape=[None, 28, 28, 1])
 y_label = tf.placeholder(dtype=tf.float32, shape=[None, 68])
 
 #for cho
-y11_conv = tf.layers.conv2d(inputs=x, filters=20, kernel_size=5, padding='same')
+y11_conv = tf.layers.conv2d(inputs=x, filters=10, kernel_size=5, padding='same')
 bn11 = tf.layers.batch_normalization(inputs=y11_conv, axis=-1, momentum=0.99, epsilon=0.001)
-y12_conv = tf.layers.conv2d(inputs=bn11, filters=50, kernel_size=5, padding='same')
+y12_conv = tf.layers.conv2d(inputs=bn11, filters=25, kernel_size=5, padding='same')
 bn12 = tf.layers.batch_normalization(inputs=y12_conv, axis=-1, momentum=0.99, epsilon=0.001)
 y12_flat = tf.contrib.layers.flatten(inputs=bn12)
-y13 = tf.layers.dense(inputs=y12_flat, units=1000, activation=tf.nn.relu)
+y13 = tf.layers.dense(inputs=y12_flat, units=250, activation=tf.nn.relu)
 y14 = tf.layers.dense(inputs=y13, units=num_cho)
 y_hat_cho = tf.nn.softmax(y14)
 
 
 #for jung
-y21_conv = tf.layers.conv2d(inputs=x, filters=20, kernel_size=5, padding='same')
+y21_conv = tf.layers.conv2d(inputs=x, filters=10, kernel_size=5, padding='same')
 bn21 = tf.layers.batch_normalization(inputs=y21_conv, axis=-1, momentum=0.99, epsilon=0.001)
-y22_conv = tf.layers.conv2d(inputs=bn21, filters=50, kernel_size=5, padding='same')
+y22_conv = tf.layers.conv2d(inputs=bn21, filters=25, kernel_size=5, padding='same')
 bn22 = tf.layers.batch_normalization(inputs=y22_conv, axis=-1, momentum=0.99, epsilon=0.001)
 y22_flat = tf.contrib.layers.flatten(inputs=bn22)
-y23 = tf.layers.dense(inputs=y22_flat, units=1000, activation=tf.nn.relu)
+y23 = tf.layers.dense(inputs=y22_flat, units=250, activation=tf.nn.relu)
 y24 = tf.layers.dense(inputs=y23, units=num_jung)
 y_hat_jung = tf.nn.softmax(y24)
 
 #for jong
-y31_conv = tf.layers.conv2d(inputs=x, filters=20, kernel_size=5, padding='same')
+y31_conv = tf.layers.conv2d(inputs=x, filters=10, kernel_size=5, padding='same')
 bn31 = tf.layers.batch_normalization(inputs=y31_conv, axis=-1, momentum=0.99, epsilon=0.001)
-y32_conv = tf.layers.conv2d(inputs=bn31, filters=50, kernel_size=5, padding='same')
+y32_conv = tf.layers.conv2d(inputs=bn31, filters=25, kernel_size=5, padding='same')
 bn32 = tf.layers.batch_normalization(inputs=y32_conv, axis=-1, momentum=0.99, epsilon=0.001)
 y32_flat = tf.contrib.layers.flatten(inputs=bn32)
-y33 = tf.layers.dense(inputs=y32_flat, units=1000, activation=tf.nn.relu)
+y33 = tf.layers.dense(inputs=y32_flat, units=250, activation=tf.nn.relu)
 y34 = tf.layers.dense(inputs=y33, units=num_jong)
 y_hat_jong = tf.nn.softmax(y34)
 
@@ -93,6 +93,6 @@ for it in range(max_epoch):
 """
 # Test
 # print(sess.run(accuracy, feed_dict={x: data.test.images, y_: data.test.labels}))
-test_data = load_data('unicode_SeoulNamsanB')
-feed_dict_test = {x: test_data.test.images, y_label: test_data.test.labels}
+#test_data = load_data('unicode_SeoulNamsanB')
+feed_dict_test = {x: data.test.images, y_label: data.test.labels}
 print('\nTest Accuracy : %f, %f, %f' % tuple(sess.run(accuracy, feed_dict=feed_dict_test)))
