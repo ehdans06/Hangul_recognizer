@@ -1,7 +1,7 @@
 import tensorflow as tf
 from load_data import load_data
 
-max_epoch = 1000
+max_epoch = 300
 batch_size = 100
 num_cho, num_jung, num_jong = 19, 21, 28
 

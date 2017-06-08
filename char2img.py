@@ -17,24 +17,25 @@ def char2img(encoding, image_size, fontname, save_img=False, save_dataset=False)
     elif encoding == 'unicode':
         chars = unicode_gen()
 
-    for char in chars:
-        img = Image.new('L', (image_size, image_size))
-        draw = ImageDraw.Draw(img)
-        draw.text((0, 0), char, 255, font=ImageFont.truetype('fonts/'+random.choice(fontname)+'.ttf', image_size))
+    for rot_times in range(0, len(fontname)):
+        for char in chars:
+            img = Image.new('L', (image_size, image_size))
+            draw = ImageDraw.Draw(img)
+            draw.text((0, 0), char, 255, font=ImageFont.truetype('fonts/'+random.choice(fontname)+'.ttf', image_size))
 
-        if save_img:
-            img = img.rotate(random.randrange(-30,30))
-            img.save(char + '.bmp')
+            if save_img:
+                img = img.rotate(random.randrange(-30,30))
+                img.save(char + '.bmp')
 
-        if save_dataset:
-            img_data = np.asarray(img, dtype=np.uint8) / 256  # img to ndarray
-            cho, jung, jong = jamo_decomposition(char)
-            label_onehot = np.zeros(num_cho + num_jung + num_jong)
-            label_onehot[cho] = 1
-            label_onehot[num_cho + jung] = 1
-            label_onehot[num_cho + num_jung + jong] = 1
-            data['images'].append(img_data)
-            data['labels'].append(label_onehot)
+            if save_dataset:
+                img_data = np.asarray(img, dtype=np.uint8) / 256  # img to ndarray
+                cho, jung, jong = jamo_decomposition(char)
+                label_onehot = np.zeros(num_cho + num_jung + num_jong)
+                label_onehot[cho] = 1
+                label_onehot[num_cho + jung] = 1
+                label_onehot[num_cho + num_jung + jong] = 1
+                data['images'].append(img_data)
+                data['labels'].append(label_onehot)
 
     if save_dataset:
         data['images'] = np.array(data['images']).reshape((-1, image_size, image_size, 1))
