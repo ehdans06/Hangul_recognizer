@@ -1,4 +1,5 @@
 from PIL import Image, ImageDraw, ImageFont
+import random
 import numpy as np
 import pickle as pk
 
@@ -19,10 +20,10 @@ def char2img(encoding, image_size, fontname, save_img=False, save_dataset=False)
     for char in chars:
         img = Image.new('L', (image_size, image_size))
         draw = ImageDraw.Draw(img)
-        draw.text((0, 0), char, 255, font=ImageFont.truetype('fonts/'+fontname+'.ttf', image_size))
+        draw.text((0, 0), char, 255, font=ImageFont.truetype('fonts/'+random.choice(fontname)+'.ttf', image_size))
 
         if save_img:
-            # img = img.rotate(45)
+            img = img.rotate(random.randrange(-30,30))
             img.save(char + '.bmp')
 
         if save_dataset:
@@ -38,7 +39,7 @@ def char2img(encoding, image_size, fontname, save_img=False, save_dataset=False)
     if save_dataset:
         data['images'] = np.array(data['images']).reshape((-1, image_size, image_size, 1))
         data['labels'] = np.array(data['labels'])
-        file_path = 'dataset/' + encoding + '_' + fontname + '.pkl'
+        file_path = 'dataset/' + encoding + '_' + fontname[0] + '.pkl'
         with open(file_path, 'wb') as f:
             pk.dump(data, f, pk.HIGHEST_PROTOCOL)
 
@@ -56,7 +57,7 @@ def unicode_gen():
 def unicode_one(image_size, fontname):
     img = Image.new('RGB', (image_size, image_size))
     draw = ImageDraw.Draw(img)
-    draw.text((0, 0), '뷁', (255,255,255), font=ImageFont.truetype('fonts/'+fontname+'.ttf', image_size))
+    draw.text((0, 0), '뷁', (255,255,255), font=ImageFont.truetype('fonts/'+fontname[0]+'.ttf', image_size))
     img.save('unicode-one.png')
 
 def jamo_decomposition(char):
@@ -76,7 +77,7 @@ def ndarray_to_img(img_data):
 
 def main():
     image_size = 28
-    fontname = 'NanumBarunGothic'
+    fontname = ['NanumBarunGothic', 'gungsoe', 'NanumBrush', 'NanumGothic', 'NanumMyeongjo', 'NanumPen']
     # fontname = 'NanumSquareR'
     char2img(encoding='unicode', image_size=image_size, fontname=fontname, save_dataset=True)
 

@@ -1,7 +1,7 @@
 import tensorflow as tf
 from load_data import load_data
 
-max_epoch = 300
+max_epoch = 1000
 batch_size = 100
 num_cho, num_jung, num_jong = 19, 21, 28
 
@@ -93,3 +93,5 @@ for it in range(max_epoch):
 """
 # Test
 # print(sess.run(accuracy, feed_dict={x: data.test.images, y_: data.test.labels}))
+feed_dict_test = {x: data.test.images, y_label: data.test.labels}
+print('\nTest Accuracy : %f, %f, %f' % tuple(sess.run(accuracy, feed_dict=feed_dict_test)))
