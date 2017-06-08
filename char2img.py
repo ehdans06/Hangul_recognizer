@@ -78,7 +78,7 @@ def ndarray_to_img(img_data):
 
 def main():
     image_size = 28
-    fontname_train = ['NanumBarunGothic', 'gungsoe', 'NanumGothic', 'NanumPen', 'NanumMyeongjo', 'NanumBrush']
+    fontname_train = ['NanumBarunGothic', 'gungsoe', 'NanumGothic', 'NanumPen', 'NanumMyeongjo', 'NanumBrush', 'BMDOHYEON_ttf', 'BMHANNA_11yrs_ttf', 'BMJUA_ttf', 'Busan', 'JejuGothic', 'JejuHallasan', 'JejuMyeongjo', 'SungDong Gothic B', 'SungDong Gothic EB', 'SungDong Myungjo R']
     fontname_test = ['SeoulNamsanB', 'SeoulNamsanL']
     char2img(encoding='unicode', image_size=image_size, fontname=fontname_train, save_dataset=True)
     char2img(encoding='unicode', image_size=image_size, fontname=fontname_test, save_dataset=True)
